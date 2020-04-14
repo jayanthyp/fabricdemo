@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.0.0-beta.7/fabric.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="curvedText.js"></script> <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <style>
+        @font-face {
+    font-family: 'olde_englishregular';
+    src: url('oldeenglish-webfont.woff2') format('woff2'),
+         url('oldeenglish-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'old_londonregular';
+    src: url('London Old\oldlondon-webfont.woff2') format('woff2'),
+         url('London Old\oldlondon-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #c {
+            border: 1px solid red;
+            top: 22px;
+            left: 0px;
+            height: 100%;
+            width: 99%;
+        }
+
+        .box {
+            float: left;
+            margin: 1em;
+        }
+
+        .after-box {
+            clear: left;
+        }
+
+        body,
+        input,
+        button {
+            font: 12pt Arial, Helvetica;
+        }
+
+        #canvasContainer {
+            background-image: url(data:image/gif;base64,R0lGODlhCgAKAIAAAOLi4v///yH5BAAHAP8ALAAAAAAKAAoAAAIRhB2ZhxoM3GMSykqd1VltzxQAOw==);
+            border: 2px solid #ccc;
+            display: inline-block;
+        }
+
+        input[type=range],
+        input[type=text] {
+            width: 200px;
+        }
+
+        .form-group {
+            margin-bottom: 0rem;
+        }
+
+        .form-inline label {
+            justify-content: left;
+        }
+    </style>
+
+
+    <div style="margin-top:20px;">
+        <h1>OMR Template</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p align="center">
+                <canvas id="c3" width="400" height="530" style="border:1px solid #000"></canvas>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <button onclick="Addtext()" class="btn btn-primary">Add Text</button>
+            <hr>
+<p>Change the attributes of the selected text using the below options</p>
+
+            <div class="form-group">
+                <div id="text-wrapper" class="form-inline row" style="margin-top: 10px" ng-show="getText()">
+                    <!-- <div  id="text-controls"> -->
+                    <label for="font-color" style="display:inline-block" class="col-sm-4 col-form-label">Font
+                        color</label>
+                    <input type="color" id="text-color" size="10">
+                    <!-- </div> -->
+                </div>
+                <div class="form-inline row">
+                    <label for="font-family" style="display:inline-block" class="col-sm-4 col-form-label">Font
+                        family</label>
+                    <div>
+                        <select id="font-family" class="form-control">
+                            <option value="arial">Arial</option>                            
+                            <option value="olde_englishregular">olde_englishregular</option>
+                            <!-- <option value="old_londonregular">old_londonregular</option> -->
+                            <option value="helvetica" selected>Helvetica</option>
+                            <option value="myriad pro">Myriad Pro</option>
+                            <option value="delicious">Delicious</option>
+                            <option value="verdana">Verdana</option>
+                            <option value="georgia">Georgia</option>
+                            <option value="courier">Courier</option>
+                            <option value="comic sans ms">Comic Sans MS</option>
+                            <option value="impact">Impact</option>
+                            <option value="monaco">Monaco</option>
+                            <option value="optima">Optima</option>
+                            <option value="hoefler text">Hoefler Text</option>
+                            <option value="plaster">Plaster</option>
+                            <option value="engagement">Engagement</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-inline row">
+                    <label for="text-align" style="display:inline-block" class="col-sm-4 col-form-label">Text
+                        align</label>
+                    <div>
+                        <select id="text-align" class="form-control">
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                            <option value="justify">Justify</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-inline row">
+                    <label for="text-bg-color" class="col-sm-4 col-form-label">Background color</label>
+                    <input type="color" id="text-bg-color" size="10">
+                </div>
+                <div class="form-inline row">
+                    <label for="text-lines-bg-color" class="col-sm-4 col-form-label">Background text color</label>
+                    <input type="color" id="text-lines-bg-color" size="10">
+                </div>
+                <div class="form-inline row">
+                    <label for="text-stroke-color" class="col-sm-4 col-form-label">Stroke color</label>
+                    <input type="color" id="text-stroke-color">
+                </div>
+                <div class="form-inline row">
+                    <label for="text-stroke-width" class="col-sm-4 col-form-label">Stroke width</label>
+                    <div>
+                        <input type="range" value="1" min="1" max="5" id="text-stroke-width" class="form-control">
+                    </div>
+                </div>
+                <div class="form-inline row">
+                    <label for="text-font-size" class="col-sm-4 col-form-label">Font size</label>
+                    <div>
+                        <input type="range" value="" min="1" max="120" step="1" id="text-font-size"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="form-inline row">
+                    <label for="text-line-height" class="col-sm-4 col-form-label">Line height</label>
+                    <div>
+                        <input type="range" value="" min="0" max="10" step="0.1" id="text-line-height"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div id="text-controls-additional" class="form-check-inline">
+                <label class="form-check-label">
+                    <input type='checkbox' name='fonttype' id="text-cmd-bold" class="form-check-input">
+                    Bold
+                </label>
+                <label class="form-check-label">
+                    <input type='checkbox' name='fonttype' id="text-cmd-italic" class="form-check-input">
+                    Italic
+                </label>
+                <label class="form-check-label">
+                    <input type='checkbox' name='fonttype' id="text-cmd-underline" class="form-check-input">
+                    Underline
+                </label>
+                <label class="form-check-label">
+                    <input type='checkbox' name='fonttype' id="text-cmd-linethrough" class="form-check-input">
+                    Linethrough
+                </label>
+                <label class="form-check-label">
+                    <input type='checkbox' name='fonttype' id="text-cmd-overline">
+                    Overline
+                </label>
+            </div>
+            <!-- </div> -->
+            <hr>
+
+            <!-- html code for curved text -->
+
+            <!-- <canvas id="c" width="400" height="200"></canvas> -->
+            <div class="form-group form-inline row">
+                <label for="textb" class="form-check-label col-sm-4">Curved Text</label>
+                <input id='textb' type="text" class="text form-control" value="DRINKING PROUDLY SINCE COLLEGE">
+            </div>
+            Radius x :<input type="range" min="0" max="500" value="100" class="radiusX" /><br>
+            Radius y :<input type="range" min="0" max="500" value="100" class="radiusY" /><br>
+            Text Space : <input type="range" min="5" max="40" value="7" class="spacing" /><br>
+            Rotation : <input type="range" min="-180" max="180" value="0" class="rotate" /><br>
+            Text Inversion : <label><input type="radio" name="reverse" class="reverse" value="true" /> Oui</label>
+            <label><input type="radio" name="reverse" class="reverse" value="false" checked="checked" />
+                Non</label><br />
+            Alignment : <label><input type="radio" name="align" class="align" value="left" /> Gauche</label>
+            <label><input type="radio" name="align" class="align" value="center" checked="checked" /> Centré</label>
+            <label><input type="radio" name="align" class="align" value="right" /> Droite</label><br>
+            Text Tail : <input type="range" min="3" max="100" value="20" class="fontSize" /><br>
+
+            <hr>
+            <button class="btn btn-primary" id="select">Selection mode</button>
+            <button class="btn btn-secondary" id="draw">Drawing mode</button>
+            <button class="btn btn-danger" id="delete">Delete selected object(s)</button>
+        </div>
+
+
+    </div>
+    </div>
+    <hr>
+    <div class='row'>
+        <div class="col-md-6">
+            <input class="btn btn-primary" type="button" id="stringifyContent" value="Stringify Content"
+                onclick="stringifyContentFunction()">
+        </div>
+        <div class="col-md-6">
+            <p align="center">
+                <canvas id="canvas2" width="400" height="530" style="border:1px solid #000"></canvas>
+            </p>
+        </div>
+    </div>
+
+    <form class="form-inline" role="form">
+        <div class="form-group">
+            <label class="sr-only" for="name">Full Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter Full Name">
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="inputfile">File input</label>
+            <input type="file" id="inputfile">
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox"> Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        // $(function() {
+        var canvas1 = new fabric.Canvas('canvas1');
+        canvas1.renderAll();
+
+        //Default Background
+        fabric.Image.fromURL('OMR.jpg', function (img) {
+            canvas1.setBackgroundImage(img, canvas1.renderAll.bind(canvas1), {
+                scaleX: canvas1.width / img.width,
+                scaleY: canvas1.height / img.height
+            });
+        });
+        canvas1.add(new fabric.Rect({
+            left: 50,
+            top: 50,
+            height: 20,
+            width: 20,
+            fill: 'green'
+        }));
+
+    </script>
+    <script>
+        fabric.Object.prototype.transparentCorners = false;
+        fabric.Object.prototype.padding = 5;
+
+
+        var $ = function (id) { return document.getElementById(id) };
+
+
+        var canvas = this.__canvas = new fabric.Canvas('c3');
+        // canvas.setHeight(400);
+        // 	canvas.setWidth(530);
+        fabric.Image.fromURL('OMR.jpg', function (img1) {
+            canvas.setBackgroundImage(img1, canvas.renderAll.bind(canvas), {
+                scaleX: canvas.width / img1.width,
+                scaleY: canvas.height / img1.height
+            });
+        });
+        canvas.loadFromJSON('{"version":"2.0.0-beta7","objects":[{"type":"i-text","version":"2.0.0-beta7","originX":"left","originY":"top","left":56.43,"top":211.82,"width":486.01,"height":56.5,"fill":"#fffa3e","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.69,"scaleY":0.84,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"text":"Happy Birthday Jayanth","fontSize":50,"fontWeight":"normal","fontFamily":"olde_englishregular","fontStyle":"normal","lineHeight":1.16,"underline":false,"overline":false,"linethrough":false,"textAlign":"left","textBackgroundColor":"","charSpacing":0,"styles":{}},{"type":"i-text","version":"2.0.0-beta7","originX":"left","originY":"top","left":95,"top":264.04,"width":423.51,"height":56.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.6,"scaleY":0.6,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"text":"Old habbits die hard!","fontSize":50,"fontWeight":"normal","fontFamily":"olde_englishregular","fontStyle":"normal","lineHeight":1.16,"underline":false,"overline":false,"linethrough":false,"textAlign":"left","textBackgroundColor":"","charSpacing":0,"styles":{}}],"backgroundImage":{"type":"image","version":"2.0.0-beta7","originX":"left","originY":"top","left":0,"top":0,"width":1000,"height":1324,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.4,"scaleY":0.4,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"crossOrigin":"","cropX":0,"cropY":0,"src":"OMR.jpg","filters":[]}}');
+
+
+        //           var text = new fabric.Text('hello world', { left: 100, top: 100 });
+        // canvas.add(text);
+
+        function Addtext() {
+            canvas.add(new fabric.IText('Tap and Type', {
+                left: 50,
+                top: 100,
+                fontFamily: 'arial black',
+                fill: '#333',
+                fontSize: 50
+            }));
+        }
+
+        document.getElementById('text-color').onchange = function () {
+            canvas.getActiveObject().set('fill', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-bg-color').onchange = function () {
+            canvas.getActiveObject().set('backgroundColor', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-lines-bg-color').onchange = function () {
+            canvas.getActiveObject().set('textBackgroundColor', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-stroke-color').onchange = function () {
+            canvas.getActiveObject().set('stroke', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-stroke-width').onchange = function () {
+            canvas.getActiveObject().set('strokeWidth', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('font-family').onchange = function () {
+            canvas.getActiveObject().set('fontFamily', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-font-size').onchange = function () {
+            canvas.getActiveObject().set('fontSize', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-line-height').onchange = function () {
+            canvas.getActiveObject().set('lineHeight', this.value);
+            canvas.renderAll();
+        };
+
+        document.getElementById('text-align').onchange = function () {
+            canvas.getActiveObject().set('textAlign', this.value);
+            canvas.renderAll();
+        };
+
+
+        radios5 = document.getElementsByName("fonttype");  // wijzig naar button
+        for (var i = 0, max = radios5.length; i < max; i++) {
+            radios5[i].onclick = function () {
+
+                if (document.getElementById(this.id).checked == true) {
+                    if (this.id == "text-cmd-bold") {
+                        canvas.getActiveObject().set("fontWeight", "bold");
+                    }
+                    if (this.id == "text-cmd-italic") {
+                        canvas.getActiveObject().set("fontStyle", "italic");
+                    }
+                    if (this.id == "text-cmd-underline") {
+                        canvas.getActiveObject().set("textDecoration", "underline");
+                    }
+                    if (this.id == "text-cmd-linethrough") {
+                        canvas.getActiveObject().set("textDecoration", "line-through");
+                    }
+                    if (this.id == "text-cmd-overline") {
+                        canvas.getActiveObject().set("textDecoration", "overline");
+                    }
+
+
+
+                } else {
+                    if (this.id == "text-cmd-bold") {
+                        canvas.getActiveObject().set("fontWeight", "");
+                    }
+                    if (this.id == "text-cmd-italic") {
+                        canvas.getActiveObject().set("fontStyle", "");
+                    }
+                    if (this.id == "text-cmd-underline") {
+                        canvas.getActiveObject().set("textDecoration", "");
+                    }
+                    if (this.id == "text-cmd-linethrough") {
+                        canvas.getActiveObject().set("textDecoration", "");
+                    }
+                    if (this.id == "text-cmd-overline") {
+                        canvas.getActiveObject().set("textDecoration", "");
+                    }
+                }
+
+                canvas.renderAll();
+            }
+        }
+        // console.log(JSON.stringify(canvas1));
+        function stringifyContentFunction() {
+            canvas.renderAll();
+            console.log(JSON.stringify(canvas));
+            var canvas2 = new fabric.Canvas("canvas2");
+            canvas2.loadFromJSON(JSON.stringify(canvas));
+            canvas2.renderAll();
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+    <!-- script for curved text -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+
+        var Example;
+
+        $(document).ready(function () {
+
+            //   canvas4 = new fabric.Canvas('c3');
+
+            Example = new CurvedText(canvas, { top: 47, left: 58 });
+
+
+            $('.radiusX, .radiusY, .spacing, .rotate, .align, .fontSize').change(function () {
+                Example.set($(this).attr('class'), $(this).val(), true);
+            });
+            $('.reverse').change(function () {
+                Example.set('reverse', ($(this).val() == 'true'));
+            });
+            $('.text').keyup(function () {
+                Example.setText($(this).val());
+            });
+
+        });
+
+    </script>
+
+    <!-- select,delete and drawing mode -->
+    <script>
+        // var canvas = new fabric.Canvas('paper', { isDrawingMode: false });
+        $("#select").click(function () {
+            canvas.isDrawingMode = false;
+        });
+        $("#draw").click(function () {
+            canvas.isDrawingMode = true;
+        });
+        $("#delete").click(function () {
+            canvas.isDrawingMode = false;
+            deleteObjects();
+        });
+
+        // Adding objects to the canvas...
+
+        // // // adding text
+        // // var text = new fabric.Text('Text inside canvas', {
+        // //     left: 40,
+        // //     top: 50
+        // // });
+        // // text.hasRotatingPoint = true;
+        // // canvas.add(text);
+
+        // // // adding circle
+        // // var circle = new fabric.Circle({
+        // //     left: 200,
+        // //     top: 150,
+        // //     radius: 50,
+        // //     fill: "#299b71"
+        // // });
+        // // circle.hasRotatingPoint = true;
+        // // canvas.add(circle);
+
+        // // // adding triangle
+        // // var triangle = new fabric.Triangle({
+        // //     left: 130,
+        // //     top: 150,
+        // //     strokeWidth: 1,
+        // //     width: 70, height: 90,
+        // //     stroke: 'black',
+        // //     fill: '#ff8a1b',
+        // //     selectable: true,
+        // //     originX: 'center'
+        // // });
+        // // triangle.hasRotatingPoint = true;
+        // // canvas.add(triangle);
+
+        // select all objects
+        function deleteObjects() {
+            var activeObject = canvas.getActiveObject(),
+                activeGroup = canvas.get('ActiveGroup');
+            if (activeObject) {
+                if (confirm('Are you sure?')) {
+                    canvas.remove(activeObject);
+                }
+            }
+            else if (activeGroup) {
+                if (confirm('Are you sure?')) {
+                    var objectsInGroup = activeGroup.getObjects();
+                    canvas.discardActiveGroup();
+                    objectsInGroup.forEach(function (object) {
+                        canvas.remove(object);
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

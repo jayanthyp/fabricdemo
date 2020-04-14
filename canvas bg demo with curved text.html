@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.0.0-beta.7/fabric.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="curvedText.js"></script> 
+</head>
+<body>
+    <style>
+        canvas 
+        {
+        max-width: 100%;
+        height: auto;
+        }
+        #c{
+     border:1px solid red;
+     top:22px;
+     left:0px;
+     height: 100%;
+     width: 99%;
+ }
+
+.box {
+  float: left;
+  margin: 1em;
+}
+.after-box {
+  clear: left;
+}
+
+body, input, button {
+	font: 12pt Arial, Helvetica;
+}
+
+#canvasContainer {
+	background-image: url(data:image/gif;base64,R0lGODlhCgAKAIAAAOLi4v///yH5BAAHAP8ALAAAAAAKAAoAAAIRhB2ZhxoM3GMSykqd1VltzxQAOw==);
+	border: 2px solid #ccc;
+	display: inline-block;
+}
+
+input[type=range], input[type=text] {
+	width: 200px;
+}
+        </style>
+<div style="margin-top:20px;">
+   <h1>OMR Template</h1>
+</div>
+
+<p align="center">
+<canvas id="canvas1" width="400" height="530" style="border:1px solid #000"></canvas>
+</p>
+<input type="button" id="stringifyContent" value="Stringify Content" onclick="stringifyContentFunction()">
+<p align="center">
+    <canvas id="canvas2" width="400" height="530" style="border:1px solid #000"></canvas>
+    </p>
+    <p align="center">
+        <canvas id="c3" width="400" height="530" style="border:1px solid #000"></canvas>
+        </p>
+<!-- text box -->
+    <button onclick="Addtext()">Add Texto</button>
+
+    <!-- <div  class="box">
+    
+        <canvas id="c"></canvas>
+    </div> -->
+                    
+      
+      <div id="text-wrapper" style="margin-top: 10px" ng-show="getText()">
+    
+        <div id="text-controls">
+          <input type="color" id="text-color" size="10">
+          <label for="font-family" style="display:inline-block">Font family:</label>
+          <select id="font-family">
+            <option value="arial">Arial</option>
+            <option value="helvetica" selected>Helvetica</option>
+            <option value="myriad pro">Myriad Pro</option>
+            <option value="delicious">Delicious</option>
+            <option value="verdana">Verdana</option>
+            <option value="georgia">Georgia</option>
+            <option value="courier">Courier</option>
+            <option value="comic sans ms">Comic Sans MS</option>
+            <option value="impact">Impact</option>
+            <option value="monaco">Monaco</option>
+            <option value="optima">Optima</option>
+            <option value="hoefler text">Hoefler Text</option>
+            <option value="plaster">Plaster</option>
+            <option value="engagement">Engagement</option>
+          </select>
+          <br>
+          <label for="text-align" style="display:inline-block">Text align:</label>
+          <select id="text-align">
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+            <option value="justify">Justify</option>
+          </select>
+          <div>
+            <label for="text-bg-color">Background color:</label>
+            <input type="color"  id="text-bg-color" size="10">
+          </div>
+          <div>
+            <label for="text-lines-bg-color">Background text color:</label>
+            <input type="color"  id="text-lines-bg-color" size="10">
+          </div>
+          <div>
+            <label for="text-stroke-color">Stroke color:</label>
+            <input type="color"  id="text-stroke-color">
+          </div>
+          <div>
+          
+    
+            <label for="text-stroke-width">Stroke width:</label>
+            <input type="range" value="1" min="1" max="5" id="text-stroke-width">
+          </div>
+          <div>
+            <label for="text-font-size">Font size:</label>
+            <input type="range" value="" min="1" max="120" step="1" id="text-font-size">
+          </div>
+          <div>
+            <label for="text-line-height">Line height:</label>
+            <input type="range" value="" min="0" max="10" step="0.1" id="text-line-height">
+          </div>
+        </div>
+        <div id="text-controls-additional">
+          <input type='checkbox' name='fonttype' id="text-cmd-bold">
+            Bold
+        
+          <input type='checkbox' name='fonttype' id="text-cmd-italic">
+            Italic
+         
+          <input type='checkbox' name='fonttype' id="text-cmd-underline" >
+            Underline
+          
+          <input type='checkbox' name='fonttype'  id="text-cmd-linethrough">
+            Linethrough
+         
+          <input type='checkbox' name='fonttype'  id="text-cmd-overline" >
+            Overline
+          
+        </div>
+<hr>
+
+<!-- html code for curved text -->
+
+<!-- <canvas id="c" width="400" height="200"></canvas> -->
+  <br>
+  <input type="text" class="text" value="DRINKING PROUDLY SINCE COLLEGE"><br>
+  Rayon x :<input type="range"  min="0" max="500" value="100" class="radiusX" /><br>
+  Rayon y :<input type="range"  min="0" max="500" value="100" class="radiusY" /><br>
+  Espacement : <input type="range"  min="5" max="40" value="7" class="spacing" /><br>
+  Rotation : <input type="range"  min="-180" max="180" value="0" class="rotate" /><br>
+  inverser le texte : <label><input type="radio" name="reverse" class="reverse" value="true" /> Oui</label> <label><input type="radio" name="reverse" class="reverse" value="false" checked="checked" /> Non</label><br />
+  Alignement : <label><input type="radio" name="align" class="align" value="left" /> Gauche</label> <label><input type="radio" name="align" class="align" value="center" checked="checked" /> Centré</label>  <label><input type="radio" name="align" class="align" value="right" /> Droite</label><br >
+  Taille du texte : <input type="range"  min="3" max="100" value="20" class="fontSize" /><br> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// $(function() {
+    var canvas1 = new fabric.Canvas('canvas1');
+    canvas1.renderAll();
+
+    //Default Background
+    fabric.Image.fromURL('OMR.jpg', function(img) {
+             canvas1.setBackgroundImage(img, canvas1.renderAll.bind(canvas1), {
+                scaleX: canvas1.width / img.width,
+                scaleY: canvas1.height / img.height
+             });
+          });
+          canvas1.add(new fabric.Rect({
+  left: 50,
+  top: 50,
+  height: 20,
+  width: 20,
+  fill: 'green'
+}));
+   
+ </script>
+ <script>
+      fabric.Object.prototype.transparentCorners = false;
+    fabric.Object.prototype.padding = 5;
+    
+     
+  var $ = function(id){return document.getElementById(id)};
+
+
+  var canvas = this.__canvas = new fabric.Canvas('c3');
+  	// canvas.setHeight(400);
+	// 	canvas.setWidth(530);
+        fabric.Image.fromURL('OMR.jpg', function(img1) {
+             canvas.setBackgroundImage(img1, canvas.renderAll.bind(canvas), {
+                scaleX: canvas.width / img1.width,
+                scaleY: canvas.height / img1.height
+             });
+          });
+          canvas.loadFromJSON('{"version":"2.0.0-beta7","objects":[{"type":"i-text","version":"2.0.0-beta7","originX":"left","originY":"top","left":72.88,"top":323.88,"width":365.67,"height":56.5,"fill":"#fde74d","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.64,"scaleY":0.64,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"text":"Tap and Type","fontSize":50,"fontWeight":"normal","fontFamily":"arial black","fontStyle":"normal","lineHeight":1.16,"underline":false,"overline":false,"linethrough":false,"textAlign":"left","textBackgroundColor":"","charSpacing":0,"styles":{}},{"type":"i-text","version":"2.0.0-beta7","originX":"left","originY":"top","left":160.45,"top":236.62,"width":155.59,"height":56.5,"fill":"#ff4a4a","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.44,"scaleY":0.44,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"text":"Demo","fontSize":50,"fontWeight":"normal","fontFamily":"arial black","fontStyle":"normal","lineHeight":1.16,"underline":false,"overline":false,"linethrough":false,"textAlign":"left","textBackgroundColor":"","charSpacing":0,"styles":{}}],"backgroundImage":{"type":"image","version":"2.0.0-beta7","originX":"left","originY":"top","left":0,"top":0,"width":1000,"height":1324,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.4,"scaleY":0.4,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"crossOrigin":"","cropX":0,"cropY":0,"src":"file:///C:/Users/JA394556/Desktop/HTML%20Codes/Fabric%20JS%20testing/OMR.jpg","filters":[]}}');
+          
+
+//           var text = new fabric.Text('hello world', { left: 100, top: 100 });
+// canvas.add(text);
+
+function Addtext() { 
+canvas.add(new fabric.IText('Tap and Type', { 
+      left: 50,
+      top: 100,
+      fontFamily: 'arial black',
+      fill: '#333',
+	    fontSize: 50
+}));
+}
+    
+   document.getElementById('text-color').onchange = function() {
+            canvas.getActiveObject().set('fill',this.value);
+            canvas.renderAll();
+        };
+		
+		document.getElementById('text-bg-color').onchange = function() {
+            canvas.getActiveObject().setBackgroundColor(this.value);
+            canvas.renderAll();
+        };
+		
+		document.getElementById('text-lines-bg-color').onchange = function() {
+            canvas.getActiveObject().setTextBackgroundColor(this.value);
+            canvas.renderAll();
+        };
+
+		document.getElementById('text-stroke-color').onchange = function() {
+            canvas.getActiveObject().setStroke(this.value);
+            canvas.renderAll();
+        };	
+
+		document.getElementById('text-stroke-width').onchange = function() {
+            canvas.getActiveObject().setStrokeWidth(this.value);
+            canvas.renderAll();
+        };				
+	
+		document.getElementById('font-family').onchange = function() {
+            canvas.getActiveObject().set('fontFamily',this.value);
+            canvas.renderAll();
+        };
+		
+		document.getElementById('text-font-size').onchange = function() {
+            canvas.getActiveObject().setFontSize(this.value);
+            canvas.renderAll();
+        };
+		
+		document.getElementById('text-line-height').onchange = function() {
+            canvas.getActiveObject().setLineHeight(this.value);
+            canvas.renderAll();
+        };
+		
+		document.getElementById('text-align').onchange = function() {
+            canvas.getActiveObject().setTextAlign(this.value);
+            canvas.renderAll();
+        };
+		
+	
+ radios5 = document.getElementsByName("fonttype");  // wijzig naar button
+    for(var i = 0, max = radios5.length; i < max; i++) {
+        radios5[i].onclick = function() {
+            
+            if(document.getElementById(this.id).checked == true) {
+                if(this.id == "text-cmd-bold") {
+                    canvas.getActiveObject().set("fontWeight", "bold");
+                }
+                if(this.id == "text-cmd-italic") {
+                    canvas.getActiveObject().set("fontStyle", "italic");
+                }
+                if(this.id == "text-cmd-underline") {
+                    canvas.getActiveObject().set("textDecoration", "underline");
+                }
+				if(this.id == "text-cmd-linethrough") {
+                    canvas.getActiveObject().set("textDecoration", "line-through");
+                }
+				if(this.id == "text-cmd-overline") {
+                    canvas.getActiveObject().set("textDecoration", "overline");
+                }
+                
+                
+                
+            } else {
+                if(this.id == "text-cmd-bold") {
+                    canvas.getActiveObject().set("fontWeight", "");
+                }
+                if(this.id == "text-cmd-italic") {
+                    canvas.getActiveObject().set("fontStyle", "");
+                }  
+                if(this.id == "text-cmd-underline") {
+                    canvas.getActiveObject().set("textDecoration", "");
+                }
+				if(this.id == "text-cmd-linethrough") {
+                    canvas.getActiveObject().set("textDecoration", "");
+                }  
+                if(this.id == "text-cmd-overline") {
+                    canvas.getActiveObject().set("textDecoration", "");
+                }
+            }            
+            
+            canvas.renderAll();
+        }
+    }
+   // console.log(JSON.stringify(canvas1));
+function stringifyContentFunction(){
+    canvas.renderAll();
+    console.log(JSON.stringify(canvas));
+    var canvas2=new fabric.Canvas("canvas2");
+    canvas2.loadFromJSON(JSON.stringify(canvas));
+    canvas2.renderAll();
+    }
+ </script>
+
+
+
+
+
+
+
+
+
+<!-- script for curved text -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+    var Example;
+    
+    $(document).ready(function(){
+    
+    //   canvas4 = new fabric.Canvas('c3');
+    
+      Example = new CurvedText( canvas, {top:47,  left:58} );
+     
+     
+      $('.radiusX, .radiusY, .spacing, .rotate, .align, .fontSize').change(function(){
+        Example.set( $(this).attr('class'), $(this).val() , true ) ;    
+      });
+      $('.reverse').change(function(){
+        Example.set( 'reverse', ( $(this).val() == 'true' ) ) ;    
+      });
+      $('.text').keyup(function(){
+        Example.setText( $(this).val() ) ;
+      });
+    
+    });
+    
+    </script>
+</body>
+</html>

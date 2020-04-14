@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric JS Testing</title>
+    <script src="fabric.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Welcome to Fabric JS Testing</h1>
+    <canvas id='c' width='auto' height='600' style="border:1px solid #000000;"></canvas>
+    <input type="button" value="Go Right" id='b'>
+
+    <script>
+        var canvas=new fabric.Canvas('c');
+        // var image = new Image()
+        // image.src = 'OMR.jpg';
+        // image.onLoad = function () { 
+        // canvas.width = image.width;
+        // canvas.height = image.height;
+        // };
+        // // fabric.Image.fromURL('OMR.jpg',function(img)
+        // // {
+        // //     // img.set('width',100);
+        // //     // img.set('height',132);
+        // //     // img.setWidth(100);
+        // //     // img.setHeight(132);
+        // //     img.set('scaleX',.25);
+        // //     img.set('scaleY',.25);
+        // //     canvas.add(img);
+        // // });
+
+        canvas.setBackgroundImage('OMR.jpg', canvas.renderAll.bind(canvas));
+        this.__canvases.push(canvas);
+        $('#b').click(function(){
+            rect.set('left',rect.get('left')+10);
+            canvas.renderAll();
+        })
+    </script>
+</body>
+</html>

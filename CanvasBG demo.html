@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.0.0-beta.7/fabric.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+    <style>
+        canvas 
+        {
+        max-width: 100%;
+        height: auto;
+        }
+        </style>
+<div style="margin-top:20px;">
+    <!-- HTML Option to select Image using File upload method -->
+   <!-- <label class="control-label">Add Background Image</label>
+   <input type="file" id="bg_image" /> -->
+   <h1>OMR Template</h1>
+</div>
+
+<p align="center">
+<canvas id="canvas1" width="400" height="530" style="border:1px solid #000"></canvas>
+</p>
+<input type="button" id="stringifyContent" value="Stringify Content" onclick="stringifyContentFunction()">
+<p align="center">
+    <canvas id="canvas2" width="400" height="530" style="border:1px solid #000"></canvas>
+    </p>
+<script>
+// $(function() {
+    var canvas1 = new fabric.Canvas('canvas1');
+    //Default
+    var canvas = canvas1;
+    // canvas.backgroundColor = '#34AD39';
+    canvas.renderAll();
+
+    //Default Background
+    fabric.Image.fromURL('OMR.jpg', function(img) {
+             canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+                scaleX: canvas.width / img.width,
+                scaleY: canvas.height / img.height
+             });
+          });
+          canvas.add(new fabric.Rect({
+  left: 50,
+  top: 50,
+  height: 20,
+  width: 20,
+  fill: 'green'
+}));
+    console.log(JSON.stringify(canvas));
+    
+    // //Change background using Image
+    // document.getElementById('bg_image').addEventListener('change', function(e) {
+    //    canvas.setBackgroundColor('', canvas.renderAll.bind(canvas));
+    //    canvas.setBackgroundImage(0, canvas.renderAll.bind(canvas));
+    //    var file = e.target.files[0];
+    //    var reader = new FileReader();
+    //    reader.onload = function(f) {
+    //       var data = f.target.result;
+    //       fabric.Image.fromURL(data, function(img) {
+    //          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+    //             scaleX: canvas.width / img.width,
+    //             scaleY: canvas.height / img.height
+    //          });
+    //       });
+    //    };
+    //    reader.readAsDataURL(file);
+    // });
+//  });
+function stringifyContentFunction(){
+    console.log(JSON.stringify(canvas));
+    var canvas2=new fabric.Canvas("canvas2");
+    canvas2.loadFromJSON(JSON.stringify(canvas));
+    canvas2.renderAll();
+    // canvas2.loadFromJSON('{"version":"2.0.0-beta7","objects":[{"type":"rect","version":"2.0.0-beta7","originX":"left","originY":"top","left":127.61,"top":72.91,"width":20,"height":20,"fill":"green","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":6.9,"scaleY":6.9,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"rx":0,"ry":0}],"backgroundImage":{"type":"image","version":"2.0.0-beta7","originX":"left","originY":"top","left":0,"top":0,"width":1000,"height":1324,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":0.4,"scaleY":0.4,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"crossOrigin":"","cropX":0,"cropY":0,"src":"file:///C:/Users/JA394556/Desktop/HTML%20Codes/Fabric%20JS%20testing/OMR.jpg","filters":[]}}');
+}
+
+
+
+ </script>
+</body>
+</html>
